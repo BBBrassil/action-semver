@@ -74,5 +74,5 @@ jobs:
               echo "$version"
             fi
           ))
-          echo "next=$(../semver/src/semver.sh "$current" $"delta")" >> $GITHUB_OUTPUT
+          echo "next=$(bash ../semver/src/semver.sh "$current" $"delta")" >> $GITHUB_OUTPUT
           cd ..
