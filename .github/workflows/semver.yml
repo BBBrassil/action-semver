@@ -34,8 +34,15 @@ jobs:
       current: ${{ steps.get_current_version.outputs.current }}
       next: ${{ steps.get_next_version.outputs.next }}
     steps:
-    - name: Checkout
-      id: checkout
+    - name: Checkout semver
+      id: checkout_semver
+      uses: actions/checout@v4
+      with:
+        repository: BBBrassil/action-semver
+        path: "semver"
+        token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Checkout Repo
+      id: checkout_repo
       uses: actions/checkout@v4
       with:
         repository: ${{ inputs.repository }}
@@ -67,5 +74,5 @@ jobs:
               echo "$version"
             fi
           ))
-          echo "next=$(./src/semver.sh "$current" $"delta")" >> $GITHUB_OUTPUT
+          echo "next=$(../semver/src/semver.sh "$current" $"delta")" >> $GITHUB_OUTPUT
           cd ..
