@@ -36,7 +36,7 @@ jobs:
     steps:
     - name: Checkout semver
       id: checkout_semver
-      uses: actions/checout@v4
+      uses: actions/checkout@v4
       with:
         repository: BBBrassil/action-semver
         path: "semver"
