@@ -1,0 +1,71 @@
+name: semver
+
+on:
+  workflow_dispatch:
+    inputs:
+      repository:
+        type: string
+        required: true
+      ref:
+        type: string
+        required: false
+      type:
+        type: choice
+        options:
+        - "major"
+        - "minor"
+        - "patch"
+        required: true
+      prerelease:
+        type: string
+        required: false
+      metadata:
+        type: string
+        required: false
+
+concurrency:
+  group: semver
+  cancel-in-progress: false
+
+jobs:
+  semver:
+    runs-on: ubuntu-latest
+    outputs:
+      current: ${{ steps.get_current_version.outputs.current }}
+      next: ${{ steps.get_next_version.outputs.next }}
+    steps:
+    - name: Checkout
+      id: checkout
+      uses: actions/checkout@v4
+      with:
+        repository: ${{ inputs.repository }}
+        ref: ${{ inputs.ref }}
+        path: "repo"
+        token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Get Current Version
+      id: get_current_version
+      run: |
+          cd repo
+          echo "current=$(git tag --merged HEAD --sort=-version:refname | head -n 1)" >> $GITHUB_OUTPUT
+          cd ..
+    - name: Get Next Version
+      id: get_next_version
+      run: |
+          cd repo
+          current=${{ steps.get_current_version.outputs.current }}
+          version=${{ inputs.version }}
+          prerelease=${{ inputs.prerelease }}
+          metadata=${{ inputs.metadata }}
+          delta=$(echo $(
+            if [[ $prerelease != "" && $metadata != "" ]]; then
+              echo "$version-$prerelease+$metadata"
+            elif [[ $prerelease != "" ]]; then
+              echo "$version-$prerelease"
+            elif [[ $metadata != "" ]]; then
+              echo "$version+metadata"
+            else
+              echo "$version"
+            fi
+          ))
+          echo "next=$(./src/semver.sh "$current" $"delta")" >> $GITHUB_OUTPUT
+          cd ..
