@@ -53,7 +53,7 @@ jobs:
       id: get_current_version
       run: |
           cd repo
-          echo "$(git tag --merged HEAD --sort=-version:refname | head -n 1)" | { read current; echo "$current" } >> $GITHUB_OUTPUT
+          echo "$(git tag --merged HEAD --sort=-version:refname | head -n 1)" | { read current; echo "$current"; } >> $GITHUB_OUTPUT
           cd ..
     - name: Get Next Version
       id: get_next_version
@@ -74,5 +74,5 @@ jobs:
               echo "$type"
             fi
           ))
-          echo "$(bash ../semver/src/semver.sh "$current" $"delta")" | { read next; echo "$next" } >> $GITHUB_OUTPUT
+          echo "$(bash ../semver/src/semver.sh "$current" $"delta")" | { read next; echo "$next"; } >> $GITHUB_OUTPUT
           cd ..
