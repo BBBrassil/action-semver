@@ -60,18 +60,18 @@ jobs:
       run: |
           cd repo
           current=${{ steps.get_current_version.outputs.current }}
-          version=${{ inputs.version }}
+          type=${{ inputs.type }}
           prerelease=${{ inputs.prerelease }}
           metadata=${{ inputs.metadata }}
           delta=$(echo $(
             if [[ $prerelease != "" && $metadata != "" ]]; then
-              echo "$version-$prerelease+$metadata"
+              echo "$type-$prerelease+$metadata"
             elif [[ $prerelease != "" ]]; then
-              echo "$version-$prerelease"
+              echo "$type-$prerelease"
             elif [[ $metadata != "" ]]; then
-              echo "$version+metadata"
+              echo "$type+metadata"
             else
-              echo "$version"
+              echo "$type"
             fi
           ))
           echo "next=$(bash ../semver/src/semver.sh "$current" $"delta")" >> $GITHUB_OUTPUT
