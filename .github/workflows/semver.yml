@@ -1,0 +1,94 @@
+name: semver
+
+on:
+  workflow_dispatch:
+    inputs:
+      repository:
+        type: string
+        required: true
+      ref:
+        type: string
+        required: false
+      type:
+        type: choice
+        options:
+        - "major"
+        - "minor"
+        - "patch"
+        required: true
+      prerelease:
+        type: string
+        required: false
+      metadata:
+        type: string
+        required: false
+
+concurrency:
+  group: semver
+  cancel-in-progress: false
+
+jobs:
+  semver:
+    runs-on: ubuntu-latest
+    outputs:
+      current: ${{ steps.get_current_version.outputs.current }}
+      next: ${{ steps.get_next_version.outputs.next }}
+    steps:
+    - name: Checkout semver
+      id: checkout_semver
+      uses: actions/checkout@v4
+      with:
+        repository: BBBrassil/action-semver
+        path: "semver"
+        token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Checkout Repo
+      id: checkout_repo
+      uses: actions/checkout@v4
+      with:
+        repository: ${{ inputs.repository }}
+        ref: ${{ inputs.ref }}
+        path: "repo"
+        token: ${{ secrets.GITHUB_TOKEN }}
+        fetch-depth: 0
+        fetch-tags: true
+    - name: Get Current Version
+      id: get_current_version
+      run: |
+          cd repo
+          ref=${{ inputs.ref }}
+          if [[ $ref == "" ]]; then
+            ref="HEAD"
+          fi
+          echo "ref: $ref"
+          current=$(git tag --merged $ref --sort=-version:refname | head -n 1)
+          echo "current=$current" >> "$GITHUB_OUTPUT"
+          echo "current: $current"
+          cd ..
+    - name: Get Next Version
+      id: get_next_version
+      run: |
+          cd repo
+          type=${{ inputs.type }}
+          prerelease=${{ inputs.prerelease }}
+          metadata=${{ inputs.metadata }}
+          delta=$(echo $(
+            if [[ $prerelease != "" && $metadata != "" ]]; then
+              echo "$type-$prerelease+$metadata"
+            elif [[ $prerelease != "" ]]; then
+              echo "$type-$prerelease"
+            elif [[ $metadata != "" ]]; then
+              echo "$type+metadata"
+            else
+              echo "$type"
+            fi
+          ))
+          current=${{ steps.get_current_version.outputs.current }}
+          next=$(bash ../semver/src/semver.sh "$current" "$delta")
+          echo "next=$next" >> "$GITHUB_OUTPUT"
+          cd ..
+    - name: Test Outputs
+      id: test_outputs
+      run: |
+        current=${{ steps.get_current_version.outputs.current }}
+        next=${{ steps.get_next_version.outputs.next }}
+        echo "current: '$current', next: '$next'"
