@@ -3,7 +3,6 @@ on:
   workflow_dispatch:
     inputs:
       version_type:
-        description: "Type of semantic version to compute (major, minor, or patch)"
         type: choice
         options:
         - "major"
@@ -11,15 +10,12 @@ on:
         - "patch"
         required: true
       prerelease:
-        description: "Optional pre-release identifier for the next version"
         type: string
         required: false
       build_metadata:
-        description: "Optional build metadata for the next version"
         type: string
         required: false
       tag_prefix:
-        description: "Identifier which prefixes the semantic version in a tag (e.g. 'v' if 'v1.2.3' is an example of a valid tag)"
         type: string
         required: false
 
@@ -43,7 +39,7 @@ jobs:
         fetch-tags: true
     - id: semver
       name: "SemVer"
-      uses: BBBrassil/action-semver
+      uses: BBBrassil/action-semver@main
       with:
         version_type: ${{ inputs.version_type}}
         prerelease: ${{ inputs.prerelease}}
