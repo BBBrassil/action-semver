@@ -2,20 +2,28 @@ name: Test
 on:
   workflow_dispatch:
     inputs:
-      version_type:
+      version-type:
+        # Type of semantic version to compute (major, minor, or patch)
+        description: "Version Type"
         type: choice
         options:
         - "major"
         - "minor"
         - "patch"
         required: true
-      prerelease:
+      pre-release:
+        # Optional pre-release identifier for the next version
+        description: "Pre-Release Identifier"
         type: string
         required: false
-      build_metadata:
+      build-metadata:
+        # Optional build metadata for the next version
+        description: Build Metadata
         type: string
         required: false
-      tag_prefix:
+      tag-prefix:
+        # Identifier which prefixes the semantic version in a tag (e.g. 'v' if 'v1.2.3' is an example of a valid tag)
+        description: Tag Prefix
         type: string
         required: false
 
@@ -27,8 +35,8 @@ jobs:
   test:
     runs-on: ubuntu-latest
     outputs:
-      current: ${{ steps.get_current_version.outputs.current }}
-      next: ${{ steps.get_next_version.outputs.next }}
+      current: ${{ steps.current-version.outputs.current }}
+      next: ${{ steps.next-version.outputs.next }}
     steps:
     - id: checkout
       name: "Checkout"
@@ -41,10 +49,10 @@ jobs:
       name: "SemVer"
       uses: BBBrassil/action-semver@main
       with:
-        version_type: ${{ inputs.version_type}}
-        prerelease: ${{ inputs.prerelease}}
-        build_metadata: ${{ inputs.build_metadata}}
-        tag_prefix: ${{ inputs.tag_prefix}}
+        version-type: ${{ inputs.version-type}}
+        pre-release: ${{ inputs.pre-release}}
+        build-metadata: ${{ inputs.build-metadata}}
+        tag-prefix: ${{ inputs.tag-prefix}}
     - id: output
       name: "Output"
       run: |
