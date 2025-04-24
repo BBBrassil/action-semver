@@ -52,7 +52,7 @@ runs:
         cwd=$(pwd)
         cd ${{ inputs.workspace-path }}
         tags=$(git tag --merged HEAD --sort=-version:refname)
-        echo $"tags"
+        echo "$tags"
         cd "$cwd"
         prefix=${{ inputs.tag-prefix }}
         echo $"tags" | bash ./src/filter.sh "$prefix" | head -n 1
