@@ -41,10 +41,10 @@ runs:
       run: |
         cwd=$(pwd)
         cd ${{ inputs.workspace }}
-        tags=$(git tag --merged HEAD --sort=-version:refname)
+        tags=$(git tag --merged HEAD)
         cd "$cwd"
         tag_prefix=${{ inputs.tag-prefix }}
-        full=$(echo "$tags" | bash ./src/filter.sh "$tag_prefix" | head -n 1)
+        full=$(echo "$tags" | bash ./src/filter.sh "$tag_prefix" | bash ./src/sort.sh | head -n 1)
         split=$(bash ./src/split.sh "$full")
         {
           read -r major
