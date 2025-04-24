@@ -34,14 +34,12 @@ outputs:
     next:
       description: "Next semantic version of the specified type"
       value: ${{ steps.next_version.outputs.next }}
-outputs:
-  current: ${{ steps.current_version.outputs.value }}
-  next: ${{ steps.next_version.outputs.value }}
 runs:
   using: "composite"
   steps:
     - id: current-version
       name: "Current Version"
+      shell: bash
       run: |
         cwd=$(pwd)
         cd ${{ inputs.repo_path }}
@@ -50,6 +48,7 @@ runs:
         cd "$cwd"
     - id: next-version
       name: "Next Version"
+      shell: bash
       run: |
         version_type=${{ inputs.version-type }}
         prerelease=${{ inputs.prerelease }}
