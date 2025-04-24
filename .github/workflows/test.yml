@@ -35,9 +35,6 @@ concurrency:
 jobs:
   test:
     runs-on: ubuntu-latest
-    outputs:
-      current: ${{ steps.current-version.outputs.current }}
-      next: ${{ steps.next-version.outputs.next }}
     steps:
     - id: checkout
       name: "Checkout"
@@ -57,4 +54,4 @@ jobs:
     - id: output
       name: "Output"
       run: |
-        echo "current: ${{ steps.semver.outputs.current }}, next: ${{ steps.semver.outputs.next }}"
+        echo "current: ${{ steps.semver.outputs.version.current }}, next: ${{ steps.semver.outputs.version.next }}"

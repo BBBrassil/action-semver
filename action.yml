@@ -34,14 +34,15 @@ inputs:
     required: false
     default: ${{ github.workspace }}
 outputs:
-  current:
-    # Current semantic version based on the lasest matching tag
-    description: "Current Semantic Version"
-    value: ${{ steps.current-version.outputs.value }}
-  next:
-    # Next semantic version of the specified type
-    description: "Next Semantic Version"
-    value: ${{ steps.next-version.outputs.value }}
+  version:
+    current:
+      # Current semantic version based on the lasest matching tag
+      description: "Current Semantic Version"
+      value: ${{ steps.current-version.outputs.value }}
+    next:
+      # Next semantic version of the specified type
+      description: "Next Semantic Version"
+      value: ${{ steps.next-version.outputs.value }}
 runs:
   using: "composite"
   steps:
