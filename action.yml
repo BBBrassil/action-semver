@@ -43,7 +43,7 @@ runs:
       run: |
         cwd=$(pwd)
         cd ${{ inputs.repo_path }}
-        current=$(echo git tag --merged HEAD --sort=-version:refname | head -n 1)
+        current=$(git tag --merged $ref --sort=-version:refname | head -n 1)
         echo "value=$current" >> "$GITHUB_OUTPUT"
         cd "$cwd"
     - id: next-version
