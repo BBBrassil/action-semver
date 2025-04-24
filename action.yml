@@ -5,12 +5,7 @@ inputs:
   version-type:
     # Type of semantic version to compute (major, minor, or patch)
     description: "Version Type"
-    type: choice
-    options:
-    - "major"
-    - "minor"
-    - "patch"
-    required: true
+    type: string
   pre-release:
     # Optional pre-release identifier for the next version
     description: "Pre-Release Identifier"
@@ -33,14 +28,14 @@ inputs:
     required: false
     default: ${{ github.workspace }}
 outputs:
-    current:
-      # Current semantic version based on the lasest matching tag
-      description: "Current Semantic Version"
-      value: ${{ steps.current-version.outputs.value }}
-    next:
-      # Next semantic version of the specified type
-      description: "Next Semantic Version"
-      value: ${{ steps.next-version.outputs.next }}
+  current:
+    # Current semantic version based on the lasest matching tag
+    description: "Current Semantic Version"
+    value: ${{ steps.current-version.outputs.value }}
+  next:
+    # Next semantic version of the specified type
+    description: "Next Semantic Version"
+    value: ${{ steps.next-version.outputs.next }}
 runs:
   using: "composite"
   steps:
@@ -50,7 +45,6 @@ runs:
       run: |
         cd ${{ inputs.workspace-path }}
         current=$(git tag --merged HEAD --sort=-version:refname | head -n 1)
-        echo "current: '$current'"
         echo "value=$current" >> "$GITHUB_OUTPUT"
         cd "$cwd"
     - id: next-version
@@ -73,6 +67,4 @@ runs:
         ))
         current=${{ steps.current-version.outputs.value }}
         next=$(bash ./src/semver.sh "$current" "$delta")
-        echo "current: '$current'"
-        echo "next: '$next'"
         echo "value=$next" >> "$GITHUB_OUTPUT"
