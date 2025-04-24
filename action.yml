@@ -64,7 +64,5 @@ runs:
           fi
         ))
         current=${{ steps.current-version.outputs.value }}
-        echo $(pwd)
-        echo $(ls)
-        next=$(bash ../src/semver.sh "$current" "$delta")
+        next=$(bash ./src/semver.sh "$current" "$delta")
         echo "value=$next" >> "$GITHUB_OUTPUT"
