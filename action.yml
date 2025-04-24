@@ -41,10 +41,6 @@ runs:
       name: "Current Version"
       shell: bash
       run: |
-        echo $(pwd)
-        echo $(ls)
-        echo "workspace_path: ${{ inputs.workspace_path}}"
-        cwd=$(pwd)
         cd ${{ inputs.workspace_path }}
         current=$(git tag --merged HEAD --sort=-version:refname | head -n 1)
         echo "value=$current" >> "$GITHUB_OUTPUT"
@@ -68,5 +64,7 @@ runs:
           fi
         ))
         current=${{ steps.current-version.outputs.value }}
+        echo $(pwd)
+        echo $(ls)
         next=$(bash ../src/semver.sh "$current" "$delta")
         echo "value=$next" >> "$GITHUB_OUTPUT"
