@@ -49,11 +49,12 @@ runs:
       name: "Current Version"
       shell: bash
       run: |
+        cwd=$(pwd)
         cd ${{ inputs.workspace-path }}
-        tags=$(git tag --merged HEAD --sort=-version:refname)
-        cd "$cwd"
-        current=$(echo "$tags" | source ./src/semver.sh match_prefix ${{ inputs.tag-prefix }} | head -n 1)
+        prefix=${{ inputs.tag-prefix }}
+        git tag --merged HEAD --sort=-version:refname | bash "$cwd/src/filter.sh" "$prefix" | head -n 1
         echo "value=$current" >> "$GITHUB_OUTPUT"
+        cd "$cwd"
     - id: next-version
       name: "Next Version"
       shell: bash
@@ -73,5 +74,5 @@ runs:
           fi
         )
         current=${{ steps.current-version.outputs.value }}
-        next=$(bash ./src/semver.sh "$current" "$delta")
+        next=$(bash ./src/bump.sh "$current" "$delta")
         echo "value=$next" >> "$GITHUB_OUTPUT"
