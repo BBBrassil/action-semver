@@ -51,10 +51,11 @@ runs:
       run: |
         cwd=$(pwd)
         cd ${{ inputs.workspace-path }}
-        prefix=${{ inputs.tag-prefix }}
-        git tag --merged HEAD --sort=-version:refname | bash "$cwd/src/filter.sh" "$prefix" | head -n 1
-        echo "value=$current" >> "$GITHUB_OUTPUT"
+        tags=$(git tag --merged HEAD --sort=-version:refname)
         cd "$cwd"
+        prefix=${{ inputs.tag-prefix }}
+        echo $"tags" | bash ./src/filter.sh "$prefix" | head -n 1
+        echo "value=$current" >> "$GITHUB_OUTPUT"
     - id: next-version
       name: "Next Version"
       shell: bash
