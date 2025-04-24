@@ -7,11 +7,11 @@ on:
         description: "Version Type"
         type: choice
         options:
-        - ""
         - "major"
         - "minor"
         - "patch"
-        required: false
+        default: ""
+        required: true
       pre-release:
         # Optional pre-release identifier for the next version
         description: "Pre-Release Identifier"

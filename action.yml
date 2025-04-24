@@ -49,8 +49,9 @@ runs:
       name: "Current Version"
       shell: bash
       run: |
+        regex=$(source ./src/semver.sh prefix_regex "$inputs.tag-prefix")
         cd ${{ inputs.workspace-path }}
-        current=$(git tag --merged HEAD --sort=-version:refname | head -n 1)
+        current=$(git tag --merged HEAD --sort=-version:refname | grep $regex | head -n 1)
         echo "value=$current" >> "$GITHUB_OUTPUT"
         cd "$cwd"
     - id: next-version
