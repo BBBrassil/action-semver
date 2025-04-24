@@ -70,6 +70,6 @@ runs:
         major=${{ steps.current-version.outputs.major}}
         minor=${{ steps.current-version.outputs.minor}}
         patch=${{ steps.current-version.outputs.patch}}
-        echo "major=$(($major + 1)).$minor.$patch" >> "$GITHUB_OUTPUT"
-        echo "minor=$major.$(($minor + 1)).$patch" >> "$GITHUB_OUTPUT"
+        echo "major=$(($major + 1)).0.0" >> "$GITHUB_OUTPUT"
+        echo "minor=$major.$(($minor + 1)).0" >> "$GITHUB_OUTPUT"
         echo "patch=$major.$minor.$(($patch + 1))" >> "$GITHUB_OUTPUT"
