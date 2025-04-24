@@ -49,7 +49,7 @@ runs:
       name: "Current Version"
       shell: bash
       run: |
-        prefix = "${{ inputs.tag-prefix}}
+        prefix=${{ inputs.tag-prefix}}
         cd ${{ inputs.workspace-path }}
         current=$(git tag --merged HEAD --sort=-version:refname | grep $prefix[0-9] | head -n 1)
         echo "value=$current" >> "$GITHUB_OUTPUT"
