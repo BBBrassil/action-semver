@@ -51,7 +51,7 @@ runs:
           read -r patch
           read -r pre_release
           read -r build
-        } < bash ./src/split.sh "$full"
+        } < $(bash ./src/split.sh "$full")
         echo "major=$major" >> "$GITHUB_OUTPUT"
         echo "minor=$minor" >> "$GITHUB_OUTPUT"
         echo "patch=$patch" >> "$GITHUB_OUTPUT"
