@@ -40,7 +40,7 @@ outputs:
   next:
     # Next semantic version of the specified type
     description: "Next Semantic Version"
-    value: ${{ steps.next-version.outputs.next }}
+    value: ${{ steps.next-version.outputs.value }}
 runs:
   using: "composite"
   steps:
@@ -59,7 +59,7 @@ runs:
         version_type=${{ inputs.version-type }}
         pre_release=${{ inputs.pre-release }}
         build_metadata=${{ inputs.build-metadata }}
-        delta=$(echo $(
+        delta=$(
           if [[ $pre_release != "" && $build_metadata != "" ]]; then
             echo "$version_type-$pre_release+$build_metadata"
           elif [[ $pre_release != "" ]]; then
@@ -69,7 +69,7 @@ runs:
           else
             echo "$version_type"
           fi
-        ))
+        )
         current=${{ steps.current-version.outputs.value }}
         next=$(bash ./src/semver.sh "$current" "$delta")
         echo "value=$next" >> "$GITHUB_OUTPUT"
