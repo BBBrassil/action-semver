@@ -52,7 +52,7 @@ runs:
         cd ${{ inputs.workspace-path }}
         tags=$(git tag --merged HEAD --sort=-version:refname)
         cd "$cwd"
-        current=$($tags | source ./src/semver.sh match_prefix ${{ inputs.tag-prefix }} | head -n 1)
+        current=$(echo "$tags" | source ./src/semver.sh match_prefix ${{ inputs.tag-prefix }} | head -n 1)
         echo "value=$current" >> "$GITHUB_OUTPUT"
     - id: next-version
       name: "Next Version"
