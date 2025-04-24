@@ -7,9 +7,9 @@ inputs:
     description: Tag Prefix
     type: string
     required: false
-  workspace-path:
+  workspace:
     # Path to a checked-out repository
-    description: "Workspace Path"
+    description: "Workspace"
     type: string
     required: false
     default: ${{ github.workspace }}
@@ -40,7 +40,7 @@ runs:
       shell: bash
       run: |
         cwd=$(pwd)
-        cd ${{ inputs.workspace-path }}
+        cd ${{ inputs.workspace }}
         tags=$(git tag --merged HEAD --sort=-version:refname)
         cd "$cwd"
         tag_prefix=${{ inputs.tag-prefix }}
@@ -57,7 +57,7 @@ runs:
         echo "minor=$minor" >> "$GITHUB_OUTPUT"
         echo "patch=$patch" >> "$GITHUB_OUTPUT"
         if [[ $pre_release != "." ]]; then
-          echo "pre_release=$pre_release" >> "$GITHUB_OUTPUT"
+          echo "pre-release=$pre_release" >> "$GITHUB_OUTPUT"
         fi
         if [[ $build != "." ]]; then
           echo "build=$build" >> "$GITHUB_OUTPUT"
