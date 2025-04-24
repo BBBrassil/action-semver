@@ -1,0 +1,55 @@
+name: Test
+on:
+  workflow_dispatch:
+    inputs:
+      version_type:
+        description: "Type of semantic version to compute (major, minor, or patch)"
+        type: choice
+        options:
+        - "major"
+        - "minor"
+        - "patch"
+        required: true
+      prerelease:
+        description: "Optional pre-release identifier for the next version"
+        type: string
+        required: false
+      build_metadata:
+        description: "Optional build metadata for the next version"
+        type: string
+        required: false
+      tag_prefix:
+        description: "Identifier which prefixes the semantic version in a tag (e.g. 'v' if 'v1.2.3' is an example of a valid tag)"
+        type: string
+        required: false
+
+concurrency:
+  group: semver
+  cancel-in-progress: false
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    outputs:
+      current: ${{ steps.get_current_version.outputs.current }}
+      next: ${{ steps.get_next_version.outputs.next }}
+    steps:
+    - id: checkout
+      name: "Checkout"
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        fetch-depth: 0
+        fetch-tags: true
+    - id: semver
+      name: "SemVer"
+      uses: BBBrassil/action-semver
+      with:
+        version_type: ${{ inputs.version_type}}
+        prerelease: ${{ inputs.prerelease}}
+        build_metadata: ${{ inputs.build_metadata}}
+        tag_prefix: ${{ inputs.tag_prefix}}
+    - id: output
+      name: "Output"
+      run: |
+        echo "current: ${{ steps.semver.outputs.current }}, next: ${{ steps.semver.outputs.next }}"

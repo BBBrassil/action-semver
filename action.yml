@@ -1,0 +1,70 @@
+name: "Semantic Versioning"
+description: "Determines tag current semantic version and computes the next one"
+author: "Brendan Brassil"
+inputs:
+  version_type:
+    description: "Type of semantic version to compute (major, minor, or patch)"
+    type: choice
+    options:
+    - "major"
+    - "minor"
+    - "patch"
+    required: true
+  prerelease:
+    description: "Optional pre-release identifier for the next version"
+    type: string
+    required: false
+  build_metadata:
+    description: "Optional build metadata for the next version"
+    type: string
+    required: false
+  tag_prefix:
+    description: "Identifier which prefixes the semantic version in a tag (e.g. 'v' if 'v1.2.3' is an example of a valid tag)"
+    type: string
+    required: false
+  path:
+    description: "Path to a checked-out repository"
+    type: string
+    required: false
+    default: ${{ github.workspace }}
+outputs:
+    current:
+      description: "Current semantic version based on the lasest matching tag "
+      value: ${{ steps.current_version.outputs.value }}
+    next:
+      description: "Next semantic version of the specified type"
+      value: ${{ steps.next_version.outputs.next }}
+outputs:
+  current: ${{ steps.current_version.outputs.value }}
+  next: ${{ steps.next_version.outputs.value }}
+runs:
+  using: "composite"
+  steps:
+    - id: current-version
+      name: "Current Version"
+      run: |
+        cwd=$(pwd)
+        cd ${{ inputs.repo_path }}
+        current=$(echo git tag --merged HEAD --sort=-version:refname | head -n 1)
+        echo "value=$current" >> "$GITHUB_OUTPUT"
+        cd "$cwd"
+    - id: next-version
+      name: "Next Version"
+      run: |
+        version_type=${{ inputs.version-type }}
+        prerelease=${{ inputs.prerelease }}
+        build_metadata=${{ inputs.build-metadata }}
+        delta=$(echo $(
+          if [[ $prerelease != "" && $build_metadata != "" ]]; then
+            echo "$version_type-$prerelease+$build_metadata"
+          elif [[ $prerelease != "" ]]; then
+            echo "$version_type-$prerelease"
+          elif [[ $build_metadata != "" ]]; then
+            echo "$version_type+build_metadata"
+          else
+            echo "$version_type"
+          fi
+        ))
+        current=${{ steps.current-version.outputs.value }}
+        next=$(bash ../src/semver.sh "$current" "$delta")
+        echo "value=$next" >> "$GITHUB_OUTPUT"
