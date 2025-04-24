@@ -47,11 +47,13 @@ jobs:
       name: "SemVer"
       uses: BBBrassil/action-semver@main
       with:
-        version-type: ${{ inputs.version-type}}
-        pre-release: ${{ inputs.pre-release}}
-        build-metadata: ${{ inputs.build-metadata}}
         tag-prefix: ${{ inputs.tag-prefix}}
     - id: output
       name: "Output"
       run: |
-        echo "current: ${{ steps.semver.outputs.version.current }}, next: ${{ steps.semver.outputs.version.next }}"
+        echo "core: '${{ steps.semver.outputs.core }}'"
+        echo "pre-release: '${{ steps.semver.outputs.pre-release }}'"
+        echo "build: '${{ steps.semver.outputs.build }}'"
+        echo "next-major: '${{ steps.semver.outputs.next-major }}'"
+        echo "next-minor: '${{ steps.semver.outputs.next-minor }}'"
+        echo "next-patch: '${{ steps.semver.outputs.next-patch }}'"

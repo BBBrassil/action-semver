@@ -41,15 +41,15 @@ function bump() {
 	local major=${BASH_REMATCH[2]}
 	local minor=${BASH_REMATCH[3]}
 	local patch=${BASH_REMATCH[4]}
-	local prerelease=${BASH_REMATCH[6]}
-	local build=${BASH_REMATCH[11]}
+	local pre_release=${BASH_REMATCH[6]}
+	local build_metadata=${BASH_REMATCH[11]}
 	if [[ $delta =~ ^(major|minor|patch|((.*)(\*|[-\+]|([-\+]?(0|[1-9][0-9]*)))\.(\*|[-\+]|([-\+]?(0|[1-9][0-9]*)))\.(\*|[-\+]|([-\+]?(0|[1-9][0-9]*)))))(-(\*|((0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*))*)))?(\+(\*|([0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)))?$ ]]; then
 	  local keyword=${BASH_REMATCH[1]}
-	  local dmajor=${BASH_REMATCH[4]}
-	  local dminor=${BASH_REMATCH[7]}
-	  local dpatch=${BASH_REMATCH[10]}
-	  local dprerelease=${BASH_REMATCH[14]}
-	  local dbuild=${BASH_REMATCH[20]}
+	  local d_major=${BASH_REMATCH[4]}
+	  local d_minor=${BASH_REMATCH[7]}
+	  local d_patch=${BASH_REMATCH[10]}
+	  local d_pre_release=${BASH_REMATCH[14]}
+	  local d_build_metadata=${BASH_REMATCH[20]}
 	  if [[ $keyword == "major" ]]; then
 	    major=$(bump_number "$major" "+")
 		minor="0"
@@ -60,18 +60,18 @@ function bump() {
 	  elif [[ $keyword == "patch" ]]; then
 	    patch=$(bump_number "$patch" "+")
 	  else
-	    major=$(bump_number "$major" "$dmajor")
-	    minor=$(bump_number "$minor" "$dminor")
-	    patch=$(bump_number "$patch" "$dpatch")
+	    major=$(bump_number "$major" "$d_major")
+	    minor=$(bump_number "$minor" "$d_minor")
+	    patch=$(bump_number "$patch" "$d_patch")
 	  fi
-	  prerelease=$(bump_word "$prerelease" "$dprerelease")
-	  build=$(bump_word "$build" "$dbuild")
+	  pre_release=$(bump_word "$pre_release" "$d_pre_release")
+	  build_metadata=$(bump_word "$build_metadata" "$d_build_metadata")
 	  local v="$prefix$major.$minor.$patch"
-	  if [[ $prerelease != "" ]]; then
-	    v+="-$prerelease"
+	  if [[ $pre_release != "" ]]; then
+	    v+="-$pre_release"
 	  fi
-	  if [[ $build != "" ]]; then
-	    v+="+$build"
+	  if [[ $build_metadata != "" ]]; then
+	    v+="+$build_metadata"
 	  fi
 	  echo "$v"
 	else
