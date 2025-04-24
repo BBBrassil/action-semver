@@ -37,21 +37,22 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - id: current-version
+    - id: current_version
       name: "Current Version"
       shell: bash
       run: |
         cd ${{ inputs.workspace_path }}
         current=$(git tag --merged HEAD --sort=-version:refname | head -n 1)
+        echo "current: '$current'"
         echo "value=$current" >> "$GITHUB_OUTPUT"
         cd "$cwd"
-    - id: next-version
+    - id: next_version
       name: "Next Version"
       shell: bash
       run: |
-        version_type=${{ inputs.version-type }}
+        version_type=${{ inputs.version_type }}
         prerelease=${{ inputs.prerelease }}
-        build_metadata=${{ inputs.build-metadata }}
+        build_metadata=${{ inputs.build_metadata }}
         delta=$(echo $(
           if [[ $prerelease != "" && $build_metadata != "" ]]; then
             echo "$version_type-$prerelease+$build_metadata"
@@ -63,6 +64,8 @@ runs:
             echo "$version_type"
           fi
         ))
-        current=${{ steps.current-version.outputs.value }}
+        current=${{ steps.current_version.outputs.value }}
         next=$(bash ./src/semver.sh "$current" "$delta")
+        echo "current: '$current'"
+        echo "next: '$next'"
         echo "value=$next" >> "$GITHUB_OUTPUT"
