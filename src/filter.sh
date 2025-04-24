@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-function filter() {
+function main() {
   local expected_prefix=$1
   local line
   prefix_length=${#expected_prefix}
@@ -14,4 +14,4 @@ function filter() {
   done
 }
 
-filter $1
+main $1

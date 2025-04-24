@@ -13,9 +13,8 @@ function transform() {
   done
 }
 
-function my_sort() {
-    transformed=$(transform)
-    echo "$transformed" | sort -V
+function main() {
+    transform | sort -V -r
 }
 
-my_sort
+main

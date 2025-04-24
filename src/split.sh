@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-function split() {
+function main() {
   version=$1
   if [[ $version =~ ^(.*)(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-((0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*))*))?(\+([0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*))?$ ]]; then	local prefix=${BASH_REMATCH[1]}
     local major=${BASH_REMATCH[2]}
@@ -30,4 +30,4 @@ function split() {
   fi
 }
 
-split $1
+main $1
