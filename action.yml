@@ -46,7 +46,7 @@ runs:
         echo "workspace_path: ${{ inputs.workspace_path}}"
         cwd=$(pwd)
         cd ${{ inputs.workspace_path }}
-        current=$(git tag --merged $ref --sort=-version:refname | head -n 1)
+        current=$(git tag --merged HEAD --sort=-version:refname | head -n 1)
         echo "value=$current" >> "$GITHUB_OUTPUT"
         cd "$cwd"
     - id: next-version
