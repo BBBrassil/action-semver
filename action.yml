@@ -2,69 +2,76 @@ name: "Semantic Versioning"
 description: "Determines tag current semantic version and computes the next one"
 author: "Brendan Brassil"
 inputs:
-  version_type:
-    description: "Type of semantic version to compute (major, minor, or patch)"
+  version-type:
+    # Type of semantic version to compute (major, minor, or patch)
+    description: "Version Type"
     type: choice
     options:
     - "major"
     - "minor"
     - "patch"
     required: true
-  prerelease:
-    description: "Optional pre-release identifier for the next version"
+  pre-release:
+    # Optional pre-release identifier for the next version
+    description: "Pre-Release Identifier"
     type: string
     required: false
-  build_metadata:
-    description: "Optional build metadata for the next version"
+  build-metadata:
+    # Optional build metadata for the next version
+    description: Build Metadata
     type: string
     required: false
-  tag_prefix:
-    description: "Identifier which prefixes the semantic version in a tag (e.g. 'v' if 'v1.2.3' is an example of a valid tag)"
+  tag-prefix:
+    # Identifier which prefixes the semantic version in a tag (e.g. 'v' if 'v1.2.3' is an example of a valid tag)
+    description: Tag Prefix
     type: string
     required: false
-  workspace_path:
-    description: "Path to a checked-out repository"
+  workspace-path:
+    # Path to a checked-out repository
+    description: "Workspace Path"
     type: string
     required: false
     default: ${{ github.workspace }}
 outputs:
     current:
-      description: "Current semantic version based on the lasest matching tag "
-      value: ${{ steps.current_version.outputs.value }}
+      # Current semantic version based on the lasest matching tag
+      description: "Current Semantic Version"
+      value: ${{ steps.current-version.outputs.value }}
     next:
-      description: "Next semantic version of the specified type"
-      value: ${{ steps.next_version.outputs.next }}
+      # Next semantic version of the specified type
+      description: "Next Semantic Version"
+      value: ${{ steps.next-version.outputs.next }}
 runs:
   using: "composite"
   steps:
-    - id: current_version
+    - id: current-version
       name: "Current Version"
       shell: bash
       run: |
-        cd ${{ inputs.workspace_path }}
+        cd ${{ inputs.workspace-path }}
         current=$(git tag --merged HEAD --sort=-version:refname | head -n 1)
         echo "current: '$current'"
         echo "value=$current" >> "$GITHUB_OUTPUT"
         cd "$cwd"
-    - id: next_version
+    - id: next-version
       name: "Next Version"
       shell: bash
       run: |
-        version_type=${{ inputs.version_type }}
-        prerelease=${{ inputs.prerelease }}
-        build_metadata=${{ inputs.build_metadata }}
+        version_type=${{ inputs.version-type }}
+        pre_release=${{ inputs.pre-release }}
+        build_metadata=${{ inputs.build-metadata }}
         delta=$(echo $(
-          if [[ $prerelease != "" && $build_metadata != "" ]]; then
-            echo "$version_type-$prerelease+$build_metadata"
-          elif [[ $prerelease != "" ]]; then
-            echo "$version_type-$prerelease"
+          if [[ $pre_release != "" && $build_metadata != "" ]]; then
+            echo "$version_type-$pre_release+$build_metadata"
+          elif [[ $pre_release != "" ]]; then
+            echo "$version_type-$pre_release"
           elif [[ $build_metadata != "" ]]; then
             echo "$version_type+build_metadata"
           else
             echo "$version_type"
           fi
         ))
-        current=${{ steps.current_version.outputs.value }}
+        current=${{ steps.current-version.outputs.value }}
         next=$(bash ./src/semver.sh "$current" "$delta")
         echo "current: '$current'"
         echo "next: '$next'"
