@@ -9,6 +9,7 @@ function transform() {
         echo "$line_"
     else
         echo "$line"
+    fi
   done
 }
 
