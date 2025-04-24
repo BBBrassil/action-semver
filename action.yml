@@ -1,5 +1,5 @@
 name: "Semantic Versioning"
-description: "Determines tag current semantic version and computes the next one"
+description: "Determines the current semantic version and computes the next one"
 author: "Brendan Brassil"
 inputs:
   version-type:
@@ -54,8 +54,8 @@ runs:
         tags=$(git tag --merged HEAD --sort=-version:refname)
         echo "$tags"
         cd "$cwd"
-        prefix=${{ inputs.tag-prefix }}
-        current=$(echo "$tags" | bash ./src/filter.sh "$prefix" | head -n 1)
+        tag_prefix=${{ inputs.tag-prefix }}
+        current=$(echo "$tags" | bash ./src/filter.sh "$tag_prefix" | head -n 1)
         echo "value=$current" >> "$GITHUB_OUTPUT"
     - id: next-version
       name: "Next Version"
