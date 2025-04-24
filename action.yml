@@ -22,7 +22,7 @@ inputs:
     description: "Identifier which prefixes the semantic version in a tag (e.g. 'v' if 'v1.2.3' is an example of a valid tag)"
     type: string
     required: false
-  path:
+  workspace_path:
     description: "Path to a checked-out repository"
     type: string
     required: false
@@ -41,8 +41,11 @@ runs:
       name: "Current Version"
       shell: bash
       run: |
+        echo $(pwd)
+        echo $(ls)
+        echo "workspace_path: ${{ inputs.workspace_path}}"
         cwd=$(pwd)
-        cd ${{ inputs.repo_path }}
+        cd ${{ inputs.workspace_path }}
         current=$(git tag --merged $ref --sort=-version:refname | head -n 1)
         echo "value=$current" >> "$GITHUB_OUTPUT"
         cd "$cwd"
