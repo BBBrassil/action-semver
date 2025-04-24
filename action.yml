@@ -55,7 +55,7 @@ runs:
         echo "$tags"
         cd "$cwd"
         prefix=${{ inputs.tag-prefix }}
-        echo $"tags" | bash ./src/filter.sh "$prefix" | head -n 1
+        current=$(echo "$tags" | bash ./src/filter.sh "$prefix" | head -n 1)
         echo "value=$current" >> "$GITHUB_OUTPUT"
     - id: next-version
       name: "Next Version"
