@@ -1,0 +1,68 @@
+name: "Semantic Versioning Helper"
+description: "Uses Git tags to describe the current version and next major, minor, and patch versions following Semantic Versioning"
+author: "Brendan Brassil"
+inputs:
+  prefix:
+    description: "Version Number Prefix"
+    required: false
+  workspace:
+    description: "Git Workspace"
+    required: false
+    default: ${{ github.workspace }}
+outputs:
+  core:
+    description: "Current Version Core"
+    value: ${{ steps.current-version.outputs.core }}
+  pre-release:
+    description: "Current Pre-Release Label"
+    value: ${{ steps.current-version.outputs.pre-release }}
+  build:
+    description: "Current Build Metadata Label"
+    value: ${{ steps.current-version.outputs.build }}
+  next-major:
+    description: "Next Major Version"
+    value: ${{ steps.next-version.outputs.major }}
+  next-minor:
+    description: "Next Minor Version"
+    value: ${{ steps.next-version.outputs.minor }}
+  next-patch:
+    description: "Next Patch Version"
+    value: ${{ steps.next-version.outputs.patch }}
+runs:
+  using: "composite"
+  steps:
+    - id: current-version
+      name: "Current Version"
+      shell: bash
+      run: |
+        cd ${{ inputs.workspace }}
+        tags=$(git tag --merged HEAD)
+        cd "$GITHUB_ACTION_PATH"
+        prefix=${{ inputs.prefix }}
+        tags=$(echo "$tags" | bash ./src/filter.sh "$prefix" | bash ./src/sort.sh)
+        full=$(echo "$tags" | head -n 1)
+        split=$(bash ./src/split.sh "$full")
+        read major minor patch pre_release build <<< "$split"
+        echo "core=$major.$minor.$patch" >> "$GITHUB_OUTPUT"
+        echo "major=$major" >> "$GITHUB_OUTPUT"
+        echo "minor=$minor" >> "$GITHUB_OUTPUT"
+        echo "patch=$patch" >> "$GITHUB_OUTPUT"
+        if [[ $pre_release != "." ]]; then
+          echo "pre-release=$pre_release" >> "$GITHUB_OUTPUT"
+        fi
+        if [[ $build != "." ]]; then
+          echo "build=$build" >> "$GITHUB_OUTPUT"
+        fi
+    - id: next-version
+      name: "Next Version"
+      shell: bash
+      run: |
+        major=${{ steps.current-version.outputs.major }}
+        minor=${{ steps.current-version.outputs.minor }}
+        patch=${{ steps.current-version.outputs.patch }}
+        echo "major=$(($major + 1)).0.0" >> "$GITHUB_OUTPUT"
+        echo "minor=$major.$(($minor + 1)).0" >> "$GITHUB_OUTPUT"
+        echo "patch=$major.$minor.$(($patch + 1))" >> "$GITHUB_OUTPUT"
+branding:
+  icon: 'hash'
+  color: 'blue'
