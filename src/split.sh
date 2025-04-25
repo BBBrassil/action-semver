@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Splits the parts of a semantic version, each on a separate line
+# Splits the elements of a semantic version, each on a separate line
 # Parameters:
 #   $1 semantic version
 # Output:
