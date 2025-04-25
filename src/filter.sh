@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Filters input down to just lines containing a specified prefix and semantic version
+# Filters input down to just lines containing a specified prefix and semantic version.
 # Parameters:
 #   $1 tag prefix
 # Output:

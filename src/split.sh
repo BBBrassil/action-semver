@@ -1,14 +1,12 @@
 #!/usr/bin/env bash
 
-# Splits the elements of a semantic version, each on a separate line
+# Splits the elements of a semantic version, separated by spaces.
 # Parameters:
 #   $1 semantic version
 # Output:
-#   > major version number
-#   > minor version number
-#   > patch version
-#   > pre-release label, or "." if not present
-#   > build metadata label, or "." if not present
+#   - "[major] [minor] [patch] [pre-release] [build]"
+#   - Optional elements are output as "." if not present
+#   - "0 0 0 . ." if input is not a valid semantic version
 function main() {
   version=$1
   if [[ $version =~ ^(.*)(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-((0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*))*))?(\+([0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*))?$ ]]; then
@@ -16,26 +14,16 @@ function main() {
     local minor=${BASH_REMATCH[3]}
     local patch=${BASH_REMATCH[4]}
     local pre_release=${BASH_REMATCH[6]}
-    local build=${BASH_REMATCH[11]}
-    echo "$major"
-    echo "$minor"
-    echo "$patch"
     if [[ $pre_release == "" ]]; then
-      echo "."
-    else
-      echo "$pre_release"
+      pre_release="."
     fi
+    local build=${BASH_REMATCH[11]}
     if [[ $build == "" ]]; then
-      echo "."
-    else
-      echo "$build"
+      build="."
     fi
+    echo "$major $minor $patch $pre_release $build"
   else
-    echo "0"
-    echo "0"
-    echo "0"
-    echo "."
-    echo "."
+    echo "0 0 0 . ."
   fi
 }
 
