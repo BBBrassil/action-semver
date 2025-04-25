@@ -45,7 +45,7 @@ runs:
         prefix=${{ inputs.prefix }}
         full=$(echo "$tags" | bash ./src/filter.sh "$prefix" | bash ./src/sort.sh | head -n 1)
         split=$(bash ./src/split.sh "$full")
-        read -r major minor patch pre_release build <<< $"split"
+        read -r major minor patch pre_release build <<< "$split"
         echo "major=$major" >> "$GITHUB_OUTPUT"
         echo "minor=$minor" >> "$GITHUB_OUTPUT"
         echo "patch=$patch" >> "$GITHUB_OUTPUT"
