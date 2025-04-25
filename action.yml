@@ -32,6 +32,8 @@ outputs:
   next-patch:
     description: "Next Patch Version"
     value: ${{ steps.next-version.outputs.patch }}
+env:
+  FILTER: "bash ./src/filter.sh"
 runs:
   using: "composite"
   steps:
@@ -39,6 +41,7 @@ runs:
       name: "Current Version"
       shell: bash
       run: |
+        echo "FILTER: $FILTER"
         cd ${{ inputs.workspace }}
         tags=$(git tag --merged HEAD)
         cd "$GITHUB_ACTION_PATH"

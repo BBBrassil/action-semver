@@ -7,8 +7,8 @@
 #   > major version number
 #   > minor version number
 #   > patch version
-#   > pre-release label or . if none
-#   > build metadata label or . if none
+#   > pre-release label, or "." if not present
+#   > build metadata label, or "." if not present
 function main() {
   version=$1
   if [[ $version =~ ^(.*)(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-((0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*))*))?(\+([0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*))?$ ]]; then
