@@ -32,10 +32,6 @@ outputs:
   next-patch:
     description: "Next Patch Version"
     value: ${{ steps.next-version.outputs.patch }}
-env:
-  FILTER: "bash ./src/filter.sh"
-  SORT: "bash ./src/sort.sh"
-  SPLIT: "bash ./src/split.sh"
 runs:
   using: "composite"
   steps:
@@ -45,9 +41,10 @@ runs:
       run: |
         cd ${{ inputs.workspace }}
         tags=$(git tag --merged HEAD)
+        cd "$GITHUB_ACTION_PATH"
         prefix=${{ inputs.prefix }}
-        full=$(echo "$tags" | "$FILTER" "$prefix" | "$SORT" | head -n 1)
-        split=$("$SPLIT" "$full")
+        full=$(echo "$tags" | bash ./src/filter.sh "$prefix" | bash ./src/sort.sh | head -n 1)
+        split=$(bash ./src/split.sh "$full")
         {
           read -r major
           read -r minor
@@ -65,7 +62,6 @@ runs:
           echo "build=$build" >> "$GITHUB_OUTPUT"
         fi
         echo "core=$major.$minor.$patch" >> "$GITHUB_OUTPUT"
-        cd "$GITHUB_ACTION_PATH"
     - id: next-version
       name: "Next Version"
       shell: bash
