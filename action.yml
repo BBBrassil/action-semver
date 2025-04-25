@@ -32,6 +32,10 @@ outputs:
   next-patch:
     description: "Next Patch Version"
     value: ${{ steps.next-version.outputs.patch }}
+env:
+  FILTER: "bash ./src/filter.sh"
+  SORT: "bash ./src/sort.sh"
+  SPLIT: "bash ./src/split.sh"
 runs:
   using: "composite"
   steps:
@@ -39,16 +43,11 @@ runs:
       name: "Current Version"
       shell: bash
       run: |
-        cwd=$(pwd)
         cd ${{ inputs.workspace }}
         tags=$(git tag --merged HEAD)
-        echo "tags:\n$tags"
-        cd "$cwd"
         prefix=${{ inputs.prefix }}
-        full=$(echo "$tags" | bash ./src/filter.sh "$prefix" | bash ./src/sort.sh | head -n 1)
-        echo "full: '$full'"
-        echo "split: '$split'"
-        split=$(bash ./src/split.sh "$full")
+        full=$(echo "$tags" | "$FILTER" "$prefix" | "$SORT" | head -n 1)
+        split=$("$SPLIT" "$full")
         {
           read -r major
           read -r minor
@@ -56,11 +55,6 @@ runs:
           read -r pre_release
           read -r build
         } <<< "$split"
-        echo "major: '$major'"
-        echo "minor: '$minor'"
-        echo "patch: '$patch'"
-        echo "pre-release: '$pre_release'"
-        echo "build: '$build'"
         echo "major=$major" >> "$GITHUB_OUTPUT"
         echo "minor=$minor" >> "$GITHUB_OUTPUT"
         echo "patch=$patch" >> "$GITHUB_OUTPUT"
@@ -71,6 +65,7 @@ runs:
           echo "build=$build" >> "$GITHUB_OUTPUT"
         fi
         echo "core=$major.$minor.$patch" >> "$GITHUB_OUTPUT"
+        cd "$GITHUB_ACTION_PATH"
     - id: next-version
       name: "Next Version"
       shell: bash
