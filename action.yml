@@ -3,7 +3,7 @@ description: "Describes the current version and potential next versions followin
 author: "Brendan Brassil"
 inputs:
   prefix:
-    # Identifier which prefixes the semantic version in a tag (e.g. "v" if "v1.2.3" is an example of a valid tag)
+    # Label which prefixes the semantic version in a tag (e.g. "v" if "v1.2.3" is an example of a valid tag)
     description: Prefix
     type: string
     required: false
@@ -32,8 +32,6 @@ outputs:
   next-patch:
     description: "Next Patch Version"
     value: ${{ steps.next-version.outputs.patch }}
-env:
-  FILTER: "bash ./src/filter.sh"
 runs:
   using: "composite"
   steps:
@@ -41,20 +39,13 @@ runs:
       name: "Current Version"
       shell: bash
       run: |
-        echo "FILTER: $FILTER"
         cd ${{ inputs.workspace }}
         tags=$(git tag --merged HEAD)
         cd "$GITHUB_ACTION_PATH"
         prefix=${{ inputs.prefix }}
         full=$(echo "$tags" | bash ./src/filter.sh "$prefix" | bash ./src/sort.sh | head -n 1)
         split=$(bash ./src/split.sh "$full")
-        {
-          read -r major
-          read -r minor
-          read -r patch
-          read -r pre_release
-          read -r build
-        } <<< "$split"
+        read -r major minor patch pre_release build <<< $"split"
         echo "major=$major" >> "$GITHUB_OUTPUT"
         echo "minor=$minor" >> "$GITHUB_OUTPUT"
         echo "patch=$patch" >> "$GITHUB_OUTPUT"
