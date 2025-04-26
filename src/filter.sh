@@ -4,7 +4,7 @@
 # Parameters:
 #   $1 tag prefix
 # Output:
-#   Lines which contain specified prefix followed by a semantic versionn
+#   Lines which contain specified prefix followed by a semantic version
 function main() {
   local expected_prefix=$1
   local line
