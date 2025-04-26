@@ -23,7 +23,7 @@ on:
         type: string
         required: false
       prefix:
-        # Identifier which prefixes the semantic version in a tag (e.g. 'v' if 'v1.2.3' is an example of a valid tag)
+        # Identifier which prefixes the semantic version in a tag (e.g. "v" if "v1.2.3" is an example of a valid tag)
         description: Prefix
         type: string
         required: false

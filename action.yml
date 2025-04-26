@@ -3,12 +3,10 @@ description: "Describes the current version and potential next versions followin
 author: "Brendan Brassil"
 inputs:
   prefix:
-    # Label which prefixes the semantic version in a tag (e.g. "v" if "v1.2.3" is an example of a valid tag)
     description: Prefix
     type: string
     required: false
   workspace:
-    # Path to a checked-out repository
     description: "Workspace"
     type: string
     required: false
@@ -45,7 +43,9 @@ runs:
         prefix=${{ inputs.prefix }}
         full=$(echo "$tags" | bash ./src/filter.sh "$prefix" | bash ./src/sort.sh | head -n 1)
         split=$(bash ./src/split.sh "$full")
+        local major minor patch pre_release build
         read major minor patch pre_release build <<< "$split"
+        echo "core=$major.$minor.$patch" >> "$GITHUB_OUTPUT"
         echo "major=$major" >> "$GITHUB_OUTPUT"
         echo "minor=$minor" >> "$GITHUB_OUTPUT"
         echo "patch=$patch" >> "$GITHUB_OUTPUT"
@@ -55,7 +55,6 @@ runs:
         if [[ $build != "." ]]; then
           echo "build=$build" >> "$GITHUB_OUTPUT"
         fi
-        echo "core=$major.$minor.$patch" >> "$GITHUB_OUTPUT"
     - id: next-version
       name: "Next Version"
       shell: bash
@@ -66,3 +65,6 @@ runs:
         echo "major=$(($major + 1)).0.0" >> "$GITHUB_OUTPUT"
         echo "minor=$major.$(($minor + 1)).0" >> "$GITHUB_OUTPUT"
         echo "patch=$major.$minor.$(($patch + 1))" >> "$GITHUB_OUTPUT"
+branding:
+  icon: 'hash'
+  color: 'blue'
