@@ -43,7 +43,6 @@ runs:
         prefix=${{ inputs.prefix }}
         full=$(echo "$tags" | bash ./src/filter.sh "$prefix" | bash ./src/sort.sh | head -n 1)
         split=$(bash ./src/split.sh "$full")
-        local major minor patch pre_release build
         read major minor patch pre_release build <<< "$split"
         echo "core=$major.$minor.$patch" >> "$GITHUB_OUTPUT"
         echo "major=$major" >> "$GITHUB_OUTPUT"
