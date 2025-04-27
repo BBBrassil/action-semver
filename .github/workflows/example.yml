@@ -8,7 +8,9 @@ jobs:
         name: Checkout non-GitHub repo
         run: |
           git clone https://projects.blender.org/blender/blender --filter=blob:none --single-branch --branch=main
+          cd blender
           git fetch --tags
+          cd ..
       - id: semver
         name: SemVer
         uses: BBBrassil/action-semver@main
