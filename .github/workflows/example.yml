@@ -31,15 +31,13 @@ jobs:
         with:
           repository: "facebook/react"
           fetch-tags: "true"
-          sparse-checkout: |
-            .github
+          sparse-checkout: .github
       - id: checkout-electron
         uses: actions/checkout@v4
         with:
           repository: "electron/electron"
           fetch-tags: "true"
-          sparse-checkout: |
-            .github
+          sparse-checkout: .github
       - id: semver-react
         uses: BBBrass/action-semver@main
         with:
