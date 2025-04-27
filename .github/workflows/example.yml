@@ -7,17 +7,13 @@ jobs:
       - id: checkout
         name: Checkout non-GitHub repo
         run: |
-          mkdir repo
-          cd repo
-          git init
-          git clone https://projects.blender.org/blender/blender.git . --filter=blob:none --single-branch --branch=main
+          git clone https://projects.blender.org/blender/blender.git --filter=blob:none --single-branch --branch=main
           git fetch --tags
-          cd ..
       - id: semver
         name: SemVer
         uses: BBBrassil/action-semver@main
         with:
-          workspace: repo
+          workspace: "blender"
           prefix: "v"
       - id: output
         name: Output
