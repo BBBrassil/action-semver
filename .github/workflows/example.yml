@@ -7,7 +7,7 @@ jobs:
       - id: checkout
         name: Checkout non-GitHub repo
         run: |
-          git clone https://projects.blender.org/blender/blender.git --filter=blob:none --single-branch --branch=main
+          git clone https://projects.blender.org/blender/blender --filter=blob:none --single-branch --branch=main
           git fetch --tags
       - id: semver
         name: SemVer
