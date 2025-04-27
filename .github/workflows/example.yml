@@ -28,26 +28,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          repository: "facebook/react"
+          repository: "sschmid/Entitas"
           fetch-depth: 0
           sparse-checkout: .github
-          path: "react"
+          path: "entitas"
       - uses: actions/checkout@v4
         with:
-          repository: "electron/electron"
+          repository: "SanderMertens/flecs"
           fetch-depth: 0
           sparse-checkout: .github
-          path: "electron"
-      - id: semver-react
+          path: "flecs"
+      - id: semver-entitas
         uses: BBBrassil/action-semver@main
         with:
-          workspace: "react"
-          prefix: "v"        
-      - id: semver-electron
+          workspace: "entitas"
+      - id: semver-flecs
         uses: BBBrassil/action-semver@main
         with:
-          workspace: "electron"
+          workspace: "flecs"
           prefix: "v"
       - run: |
-          echo "React:    ${{ steps.semver-react.outputs.core }}'"
-          echo "Electron: ${{ steps.semver-react.outputs.core }}'"
+          echo "Entitas: ${{ steps.semver-entitas.outputs.core }}'"
+          echo "Flecs:   ${{ steps.semver-flecs.outputs.core }}'"
