@@ -1,0 +1,23 @@
+name: Example
+on: workflow_dispatch
+jobs:
+  example:
+    runs-on: ubuntu-latest
+    steps:
+      - id: checkout
+        name: Checkout non-GitHub repo
+        run: |
+          git clone https://projects.blender.org/blender/blender.git repo --filter=blob:none --single-branch --branch=main
+          git fetch --tags
+      - id: semver
+        name: SemVer
+        uses: BBBrassil/Semver@main
+        with:
+          workspace: repo
+          prefix: "v"
+      - id: output
+        name: Output
+        run: |
+          echo "core:        '${{ steps.semver.outputs.core }}'"
+          echo "pre-release: '${{ steps.semver.outputs.pre-release }}'"
+          echo "build:       '${{ steps.semver.outputs.build }}'"

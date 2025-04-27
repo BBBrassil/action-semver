@@ -1,5 +1,5 @@
 name: "Semantic Versioning"
-description: "Describes the current version and potential next versions following Semantic Versioning (https://semver.org/)"
+description: "Uses Git tags to describe the current version and next major, minor, and patch versions following Semantic Versioning"
 author: "Brendan Brassil"
 inputs:
   prefix:
