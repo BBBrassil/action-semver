@@ -41,7 +41,8 @@ runs:
         tags=$(git tag --merged HEAD)
         cd "$GITHUB_ACTION_PATH"
         prefix=${{ inputs.prefix }}
-        full=$(echo "$tags" | bash ./src/filter.sh "$prefix" | bash ./src/sort.sh | tail -n +1 | head -n 1)
+        tags=$(echo "$tags" | bash ./src/filter.sh "$prefix" | bash ./src/sort.sh)
+        full=$(echo "$tags" | head -n 1)
         split=$(bash ./src/split.sh "$full")
         read major minor patch pre_release build <<< "$split"
         echo "core=$major.$minor.$patch" >> "$GITHUB_OUTPUT"
