@@ -11,7 +11,7 @@ jobs:
           git fetch --tags
       - id: semver
         name: SemVer
-        uses: BBBrassil/Semver@main
+        uses: BBBrassil/action-semver@main
         with:
           workspace: repo
           prefix: "v"
