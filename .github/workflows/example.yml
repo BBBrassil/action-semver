@@ -26,30 +26,27 @@ jobs:
   example:
     runs-on: ubuntu-latest
     steps:
-      - id: checkout-react
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           repository: "facebook/react"
           fetch-tags: "true"
           sparse-checkout: .github
-      - id: checkout-electron
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           repository: "electron/electron"
           fetch-tags: "true"
           sparse-checkout: .github
-      - id: semver-react
-        uses: BBBrass/action-semver@main
+      - uses: BBBrassil/action-semver@main
         with:
           workspace: "react"
           prefix: "v"
-      - id: semver-electron
-        uses: BBBrass/action-semver@main
+        id: semver-react
+      - uses: BBBrassil/action-semver@main
         with:
           workspace: "electron"
           prefix: "v"
+        id: semver-electron
       - id: output
-        name: Output
         run: |
           echo "React:    ${{ steps.semver-react.outputs.core }}'"
           echo "Electron: ${{ steps.semver-react.outputs.core }}'"
